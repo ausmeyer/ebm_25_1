@@ -194,7 +194,72 @@ df <- data.frame(los = los_data)
 mean_los <- mean(los_data)
 median_los <- median(los_data)
 
-# Create the plot
+# Create statistics text box
+library(ggtext)
+stats_text <- paste0(
+  "<b>Statistics</b><br>",
+  "<b>Mean:</b> 88.99 hours<br>",
+  "<b>SD:</b> 146.92 hours<br>",
+  "<b>95% CI:</b> 80.41, 97.57<br>",
+  "<b>Median:</b> 48.00 hours<br>",
+  "<b>IQR:</b> 30-88 hours<br>",
+  "<b>N:</b> 1129 admissions<br>",
+  "<b>Min:</b> 1 hour<br>",
+  "<b>Max:</b> 2254 hours<br>",
+  "<b>Range:</b> 2253 hours"
+)
+
+# Create the plot WITHOUT mean and median lines
+ggplot(df, aes(x = los)) +
+  geom_histogram(bins = 30, fill = "#8CB3D9", color = "white", alpha = 0.7) +
+  # Add statistics box using ggtext
+  annotate("richtext", x = 350, y = 165, label = stats_text,
+           hjust = 0, vjust = 1, size = 3,
+           fill = "white", color = "#43418A",
+           label.padding = unit(0.5, "lines"),
+           label.r = unit(0.15, "lines")) +
+  labs(title = "Distribution of Hospital Length of Stay (Hours)",
+       x = "Length of Stay (Hours)",
+       y = "Number of Patients (Frequency)") +
+  theme_minimal() +
+  theme(text = element_text(size = 12),
+        plot.title = element_text(size = 16, face = "bold", color = "#43418A"),
+        axis.title = element_text(size = 12, face = "bold"))
+```
+
+---
+
+## Distribution of Hospital Length of Stay (with Central Tendency)
+
+```{r fig.width=9, fig.height=5, fig.align='center'}
+# Create right-skewed data for hospital length of stay
+set.seed(123)
+los_data <- c(rlnorm(800, meanlog = 3.8, sdlog = 0.5),  # Main cluster
+              runif(50, 300, 500))  # Outliers
+
+# Create data frame
+df <- data.frame(los = los_data)
+
+# Calculate statistics
+mean_los <- mean(los_data)
+median_los <- median(los_data)
+
+# Create statistics text box
+library(ggtext)
+stats_text <- paste0(
+  "<b>Statistics</b><br>",
+  "<b>Mean:</b> 88.99 hours<br>",
+  "<b>SD:</b> 146.92 hours<br>",
+  "<b>95% CI:</b> 80.41, 97.57<br>",
+  "<b>Median:</b> 48.00 hours<br>",
+  "<b>IQR:</b> 30-88 hours<br>",
+  "<b>N:</b> 1129 admissions<br>",
+  "<b>Min:</b> 1 hour<br>",
+  "<b>Max:</b> 2254 hours<br>",
+  "<b>Range:</b> 2253 hours"
+)
+
+# Create the plot WITH mean and median lines
 ggplot(df, aes(x = los)) +
   geom_histogram(bins = 30, fill = "#8CB3D9", color = "white", alpha = 0.7) +
   geom_vline(xintercept = median_los, color = "#43418A", linetype = "dashed", size = 1.2) +
@@ -203,6 +268,12 @@ ggplot(df, aes(x = los)) +
            color = "#43418A", fontface = "bold", size = 4, hjust = 1) +
   annotate("text", x = mean_los + 20, y = 120, label = "Mean", 
            color = "#E74C3C", fontface = "bold", size = 4, hjust = 0) +
+  # Add statistics box using ggtext
+  annotate("richtext", x = 350, y = 165, label = stats_text,
+           hjust = 0, vjust = 1, size = 3,
+           fill = "white", color = "#43418A",
+           label.padding = unit(0.5, "lines"),
+           label.r = unit(0.15, "lines")) +
   labs(title = "Distribution of Hospital Length of Stay (Hours)",
        x = "Length of Stay (Hours)",
        y = "Number of Patients (Frequency)") +
@@ -217,9 +288,9 @@ ggplot(df, aes(x = los)) +
 ## When Would Other Answers Be Correct?
 
 :::{.incremental}
-- **A. the large number of outliers precludes accurate estimation...:** This is incorrect. While outliers complicate analysis, they don't make it impossible. Using robust statistics like the median allows for an accurate estimation of the central tendency.
+- **A. the large number of outliers precludes accurate estimation:** This is incorrect. While outliers complicate analysis, they don't make it impossible. Using robust statistics like the median allows for an accurate estimation of the central tendency.
 
-- **B. the mean is the most appropriate measure...:** This would be correct if the histogram showed a symmetric, bell-shaped (normal) distribution. In that case, the mean and median would be nearly identical and either would be appropriate.
+- **B. the mean is the most appropriate measure:** This would be correct if the histogram showed a symmetric, bell-shaped (normal) distribution. In that case, the mean and median would be nearly identical and either would be appropriate.
 
 - **D. there is a 95% certainty that the true mean is between 30 and 88 hours:** This describes a 95% Confidence Interval. While this is a valid statistical concept, we cannot determine its value from the information given in the question, and it doesn't address the primary issue of choosing the best measure of central tendency for this dataset.
 :::
@@ -306,70 +377,9 @@ Of the following, assuming weights are distributed normally, this boy's weight f
 
 ---
 
-## Weight-for-Age Growth Chart
+## Growth Chart
 
-```{r fig.width=10, fig.height=7, fig.align='center'}
-# Create growth chart data
-age <- seq(2, 20, by = 0.1)
-mean_weight <- 2.5 + 2.3 * age + 0.01 * age^2
-sd_weight <- 1.5 + 0.3 * age
-
-# Create percentile curves
-p3 <- mean_weight - 2 * sd_weight
-p16 <- mean_weight - 1 * sd_weight
-p50 <- mean_weight
-p84 <- mean_weight + 1 * sd_weight
-p97 <- mean_weight + 2 * sd_weight
-
-# Create data frame
-growth_data <- data.frame(
-  age = age,
-  p3 = p3,
-  p16 = p16,
-  p50 = p50,
-  p84 = p84,
-  p97 = p97
-)
-
-# Calculate 5th percentile for age 11
-age_11_mean <- 2.5 + 2.3 * 11 + 0.01 * 11^2
-age_11_sd <- 1.5 + 0.3 * 11
-p5_weight <- age_11_mean + qnorm(0.05) * age_11_sd
-
-# Create the plot
-ggplot(growth_data, aes(x = age)) +
-  geom_line(aes(y = p3), color = "#808080", size = 1) +
-  geom_line(aes(y = p16), color = "#808080", size = 1) +
-  geom_line(aes(y = p50), color = "#43418A", size = 1.5) +
-  geom_line(aes(y = p84), color = "#808080", size = 1) +
-  geom_line(aes(y = p97), color = "#808080", size = 1) +
-  
-  # Add labels
-  annotate("text", x = 20.5, y = p50[length(p50)], label = "50th (Mean)", 
-           color = "#43418A", fontface = "bold", hjust = 0) +
-  annotate("text", x = 20.5, y = p84[length(p84)], label = "84th (+1 SD)", 
-           color = "#808080", hjust = 0) +
-  annotate("text", x = 20.5, y = p16[length(p16)], label = "16th (-1 SD)", 
-           color = "#808080", hjust = 0) +
-  annotate("text", x = 20.5, y = p97[length(p97)], label = "97th (+2 SD)", 
-           color = "#808080", hjust = 0) +
-  annotate("text", x = 20.5, y = p3[length(p3)], label = "3rd (-2 SD)", 
-           color = "#808080", hjust = 0) +
-  
-  # Add the boy's data point
-  geom_point(x = 11, y = p5_weight, color = "#E74C3C", size = 5) +
-  annotate("text", x = 11.5, y = p5_weight, label = "Boy's Weight\n(5th percentile)", 
-           color = "#E74C3C", fontface = "bold", hjust = 0) +
-  
-  labs(title = "Weight-for-Age Growth Chart for Boys",
-       x = "Age (Years)",
-       y = "Weight (kg)") +
-  scale_x_continuous(breaks = seq(2, 20, by = 2), limits = c(2, 22)) +
-  theme_minimal() +
-  theme(text = element_text(size = 14),
-        plot.title = element_text(size = 18, face = "bold", color = "#43418A"),
-        axis.title = element_text(size = 14, face = "bold"))
-```
+![](growth.jpg){fig-align="center"}
 
 ---
 
@@ -543,8 +553,6 @@ kable(contingency_table, col.names = c("", "Has AKI", "No AKI", "Total"),
   row_spec(0, bold = TRUE, color = "white", background = "#43418A")
 ```
 
-**Sensitivity focuses only on the "Has AKI" column**
-
 ---
 
 ## What Do the Other Numbers Represent?
@@ -613,7 +621,29 @@ kable(contingency_table_9, col.names = c("", "Has EoE (Disease)", "No EoE (Healt
   row_spec(0, bold = TRUE, color = "white", background = "#43418A")
 ```
 
+---
+
+## 2×2 Table for Question 9
+
+```{r}
+# Create the 2x2 table for question 9
+contingency_table_9 <- data.frame(
+  Test = c("Test Positive", "Test Negative", "Total"),
+  `Has EoE` = c("20 (TP)", "5 (FN)", "25"),
+  `No EoE` = c("10 (FP)", "65 (TN)", "75"),
+  Total = c("30", "70", "100")
+)
+
+kable(contingency_table_9, col.names = c("", "Has EoE (Disease)", "No EoE (Healthy)", "Total"),
+      align = c("l", "c", "c", "c")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                full_width = FALSE, font_size = 20) %>%
+  column_spec(1, bold = TRUE) %>%
+  row_spec(0, bold = TRUE, color = "white", background = "#43418A")
+```
+
 **Calculations:**
+
 - Sensitivity = TP / (TP + FN) = 20 / (20 + 5) = 20 / 25 = **80.0%**
 - Specificity = TN / (TN + FP) = 65 / (65 + 10) = 65 / 75 = **86.7%**
 
@@ -661,14 +691,41 @@ Of the following, based on the provided scatterplot, the MOST appropriate conclu
 ## Relationship Between Thumb-Sucking and Food Allergies
 
 ```{r fig.width=10, fig.height=6, fig.align='center'}
-# Create data with negative correlation
-set.seed(456)
-n <- 200
-thumb_sucking <- runif(n, 0, 36)
-# Add negative correlation with some noise
-food_allergies <- 5 - 0.12 * thumb_sucking + rnorm(n, 0, 0.8)
-# Ensure non-negative values
-food_allergies[food_allergies < 0] <- runif(sum(food_allergies < 0), 0, 0.5)
+# Create data with negative correlation matching the original pattern
+set.seed(123)
+n <- 30  # Fewer points to match the original
+
+# Create thumb_sucking values distributed across the range
+thumb_sucking <- c(
+  runif(8, 3, 8),    # cluster of points at 3-8 months
+  runif(6, 8, 12),   # points at 8-12 months  
+  runif(5, 12, 18),  # points at 12-18 months
+  runif(5, 18, 25),  # points at 18-25 months
+  runif(4, 25, 32),  # points at 25-32 months
+  runif(2, 32, 38)   # a few points at 32-38 months
+)
+
+# Create food allergies with negative correlation and realistic integer-like values
+food_allergies <- numeric(n)
+for(i in 1:n) {
+  # Base negative correlation
+  base_allergies <- 4.5 - 0.11 * thumb_sucking[i]
+  # Add some noise but keep values realistic (0-5 range)
+  food_allergies[i] <- base_allergies + rnorm(1, 0, 0.7)
+  # Round to nearest 0.5 to get more discrete-looking values
+  food_allergies[i] <- round(food_allergies[i] * 2) / 2
+  # Ensure within 0-5 range
+  food_allergies[i] <- pmax(0, pmin(5, food_allergies[i]))
+}
+
+# Manually adjust some points to match the pattern better
+# Add some specific points that match the original
+food_allergies[thumb_sucking < 8] <- sample(c(2, 3, 3, 4, 5), 
+                                            sum(thumb_sucking < 8), 
+                                            replace = TRUE)
+food_allergies[thumb_sucking > 30] <- sample(c(0, 1), 
+                                             sum(thumb_sucking > 30), 
+                                             replace = TRUE)
 
 # Create data frame
 scatter_data <- data.frame(
@@ -676,17 +733,19 @@ scatter_data <- data.frame(
   food_allergies = food_allergies
 )
 
-# Create the plot
+# Create the plot WITHOUT trend line
 ggplot(scatter_data, aes(x = thumb_sucking, y = food_allergies)) +
-  geom_point(color = "#8CB3D9", alpha = 0.6, size = 2) +
-  geom_smooth(method = "lm", se = TRUE, color = "#43418A", fill = "#43418A", alpha = 0.2) +
+  geom_point(color = "#8CB3D9", alpha = 0.6, size = 3) +
   labs(title = "Relationship Between Thumb-Sucking and Food Allergies",
        x = "Months of Thumb-Sucking",
-       y = "Number of Diagnosed Food Allergies") +
+       y = "Number of Food Allergies at 10 Years") +
+  scale_y_continuous(breaks = 0:6, limits = c(-0.5, 6)) +
+  scale_x_continuous(breaks = seq(0, 40, 5), limits = c(0, 40)) +
   theme_minimal() +
   theme(text = element_text(size = 14),
         plot.title = element_text(size = 18, face = "bold", color = "#43418A"),
-        axis.title = element_text(size = 14, face = "bold"))
+        axis.title = element_text(size = 14, face = "bold"),
+        panel.grid.minor = element_blank())
 ```
 
 ---
