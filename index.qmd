@@ -767,17 +767,17 @@ ggplot(scatter_data, aes(x = thumb_sucking, y = food_allergies)) +
 ### Key Takeaways
 
 :::{.incremental}
-- **Variable Types Matter:** Choose the right statistical approach based on whether your data is continuous, discrete, nominal, or ordinal
+- **Variable Types Matter:** Eventually, you will need to recognize whether data is continuous, discrete, nominal, or ordinal to pick he right statistical tests.
 
-- **Central Tendency:** Use mean for normal distributions, median for skewed distributions
+- **Central Tendency:** For these questions, use mean for normal distributions and probably median for skewed distributions.
 
-- **Standard Deviations:** In normal distributions, ±1 SD = 68%, ±2 SD = 95%, ±3 SD = 99.7%
+- **Standard Deviations:** In normal distributions, ±1 SD = 68%, ±2 SD = 95%, ±3 SD = 99.7% for the width of the CI.
 
-- **Prevalence vs. Incidence:** Prevalence is a snapshot, incidence measures new cases over time
+- **Prevalence vs. Incidence:** Prevalence is a snapshot, incidence measures new cases over time.
 
-- **Diagnostic Tests:** Sensitivity = true positive rate, Specificity = true negative rate
+- **Diagnostic Tests:** Sensitivity = true positive rate, Specificity = true negative rate.
 
-- **Association ≠ Causation:** Observational studies can show correlation but cannot prove causation
+- **Association ≠ Causation:** Observational studies can show correlation but cannot prove causation.
 :::
 
 <br>
