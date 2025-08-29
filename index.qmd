@@ -1,0 +1,1065 @@
+---
+title: "Biostatistics & Epidemiology for the Modern Clinician"
+subtitle: "A Practical Review of Key Concepts"
+author: "Austin Meyer, MD, PhD, MS, MPH, MS"
+date: today
+format:
+  revealjs:
+    theme: default
+    css: custom.css
+    slide-number: true
+    transition: slide
+    width: 1280
+    height: 720
+    fontsize: 26px
+    title-slide-attributes:
+      data-state: title-slide
+    self-contained: true
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+## Lecture Overview
+
+### What We'll Cover Today
+
+:::{.incremental}
+- **Part 1: Describing Clinical Data**
+  - Understanding variable types (continuous, discrete, nominal, ordinal)
+  - Choosing the right measures of central tendency (mean vs. median)
+  - Interpreting data distribution and standard deviations
+
+- **Part 2: Foundational Epidemiology & Diagnostic Testing**
+  - Differentiating prevalence from incidence
+  - Calculating and interpreting sensitivity and specificity
+
+- **Part 3: A Critical Capstone Concept**
+  - The crucial difference between association, correlation, and causation
+:::
+
+<br><br>
+
+--- 
+
+# Part 1: Describing Clinical Data {background-color="#43418A"}
+
+---
+
+## Question 1: Variable Types
+
+:::: {#quiz-container-1}
+<p class="question">
+A physician has been collecting data on adolescent patients' body mass indices (BMIs). The physician is now trying to determine whether BMI is associated with glycated hemoglobin (HbA1c) levels. It is hypothesized that there should be an association because higher BMIs are associated with type 2 diabetes mellitus and because people with uncontrolled diabetes mellitus have elevated HbA1c levels. The physician has collected data on 300 patients over the past 6 months.
+<br><br>
+Of the following, the variable type that BEST describes BMI and HbA1c is:
+</p>
+
+<form id="quiz-form-1">
+  <label>
+    <input type="radio" name="answer-1" value="A">
+    <span class="answer-text"><span class="answer-letter">A.</span> continuous</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-1" value="B">
+    <span class="answer-text"><span class="answer-letter">B.</span> discrete</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-1" value="C">
+    <span class="answer-text"><span class="answer-letter">C.</span> nominal</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-1" value="D">
+    <span class="answer-text"><span class="answer-letter">D.</span> ordinal</span>
+  </label>
+  <button type="submit">Submit Answer</button>
+</form>
+
+<div id="result-1"></div>
+::::
+
+---
+
+## When Would Other Answers Be Correct?
+
+:::{.incremental}
+- **B. discrete:** This would be correct if the variable was something you count in whole numbers.
+  - Example: "Number of cigarettes smoked per day," "Number of hospital admissions," or "Number of seizures in a month." These variables have a finite number of possible values.
+
+- **C. nominal:** This would be correct if the variable represented categories with no inherent order or rank.
+  - Example: "Blood Type (A, B, AB, O)," "Patient's City of Residence," or "Hair Color." You can't say that 'Type O' is mathematically greater than 'Type A'.
+
+- **D. ordinal:** This would be correct if the variable represented categories with a meaningful order, but the intervals between them are not equal.
+  - Example: A pain scale (1-10), a Likert scale ("Strongly Disagree" to "Strongly Agree"), or cancer staging (Stage I, II, III, IV).
+:::
+
+---
+
+## Question 2: Categorizing Data
+
+:::: {#quiz-container-2}
+<p class="question">
+A researcher is designing a clinical trial and developing the data collection forms. The researcher wants to collect information regarding household income, and, instead of leaving a blank area for the participant to report their income, the researcher provides the following choices: less than $50,000, $50,000 to $75,000, $75,001 to $100,000, and greater than $100,000.
+<br><br>
+Of the following, the BEST way to describe this income variable is:
+</p>
+
+<form id="quiz-form-2">
+  <label>
+    <input type="radio" name="answer-2" value="A">
+    <span class="answer-text"><span class="answer-letter">A.</span> continuous variable</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-2" value="B">
+    <span class="answer-text"><span class="answer-letter">B.</span> dichotomous variable</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-2" value="C">
+    <span class="answer-text"><span class="answer-letter">C.</span> nominal variable</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-2" value="D">
+    <span class="answer-text"><span class="answer-letter">D.</span> ordinal variable</span>
+  </label>
+  <button type="submit">Submit Answer</button>
+</form>
+
+<div id="result-2"></div>
+::::
+
+---
+
+## When Would Other Answers Be Correct?
+
+:::{.incremental}
+- **A. continuous variable:** This would be correct if the researcher had asked participants to write in their exact household income (e.g., "$81,100.16").
+
+- **B. dichotomous variable:** This is a specific type of categorical variable with only two possible outcomes. This would be correct if the choices were simply "Income below $75,000" and "Income $75,000 or above."
+
+- **C. nominal variable:** This would be correct if the categories had no logical order. For example, if the question was "What is your primary source of income?" with categories like "Wages," "Investments," "Retirement," "Self-Employment."
+:::
+
+---
+
+## Question 3: Central Tendency
+
+:::: {#quiz-container-3}
+<p class="question">
+A hospitalist is working on a quality improvement project related to bronchiolitis. A team member has proposed an intervention package that they believe will reduce length of stay by 25%. The hospitalist is gathering length-of-stay data from the past 3 bronchiolitis seasons to set the baseline metric for the project. The histogram and descriptive statistics are shown below.
+<br><br>
+Of the following, the MOST accurate assessment of the baseline data is that:
+</p>
+
+<form id="quiz-form-3">
+  <label>
+    <input type="radio" name="answer-3" value="A">
+    <span class="answer-text"><span class="answer-letter">A.</span> the large number of outliers precludes accurate estimation of length of stay</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-3" value="B">
+    <span class="answer-text"><span class="answer-letter">B.</span> the mean is the most appropriate measure of length of stay</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-3" value="C">
+    <span class="answer-text"><span class="answer-letter">C.</span> the median is the most appropriate measure of length of stay</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-3" value="D">
+    <span class="answer-text"><span class="answer-letter">D.</span> there is a 95% certainty that the true mean is between 30 and 88 hours</span>
+  </label>
+  <button type="submit">Submit Answer</button>
+</form>
+
+<div id="result-3"></div>
+::::
+
+---
+
+## Distribution of Hospital Length of Stay
+
+```{r fig.width=9, fig.height=5, fig.align='center'}
+# Create right-skewed data for hospital length of stay
+set.seed(123)
+los_data <- c(rlnorm(800, meanlog = 3.8, sdlog = 0.5),  # Main cluster
+              runif(50, 300, 500))  # Outliers
+
+# Create data frame
+df <- data.frame(los = los_data)
+
+# Calculate statistics
+mean_los <- mean(los_data)
+median_los <- median(los_data)
+
+# Create the plot
+ggplot(df, aes(x = los)) +
+  geom_histogram(bins = 30, fill = "#8CB3D9", color = "white", alpha = 0.7) +
+  geom_vline(xintercept = median_los, color = "#43418A", linetype = "dashed", size = 1.2) +
+  geom_vline(xintercept = mean_los, color = "#E74C3C", linetype = "dashed", size = 1.2) +
+  annotate("text", x = median_los - 20, y = 120, label = "Median", 
+           color = "#43418A", fontface = "bold", size = 4, hjust = 1) +
+  annotate("text", x = mean_los + 20, y = 120, label = "Mean", 
+           color = "#E74C3C", fontface = "bold", size = 4, hjust = 0) +
+  labs(title = "Distribution of Hospital Length of Stay (Hours)",
+       x = "Length of Stay (Hours)",
+       y = "Number of Patients (Frequency)") +
+  theme_minimal() +
+  theme(text = element_text(size = 12),
+        plot.title = element_text(size = 16, face = "bold", color = "#43418A"),
+        axis.title = element_text(size = 12, face = "bold"))
+```
+
+---
+
+## When Would Other Answers Be Correct?
+
+:::{.incremental}
+- **A. the large number of outliers precludes accurate estimation...:** This is incorrect. While outliers complicate analysis, they don't make it impossible. Using robust statistics like the median allows for an accurate estimation of the central tendency.
+
+- **B. the mean is the most appropriate measure...:** This would be correct if the histogram showed a symmetric, bell-shaped (normal) distribution. In that case, the mean and median would be nearly identical and either would be appropriate.
+
+- **D. there is a 95% certainty that the true mean is between 30 and 88 hours:** This describes a 95% Confidence Interval. While this is a valid statistical concept, we cannot determine its value from the information given in the question, and it doesn't address the primary issue of choosing the best measure of central tendency for this dataset.
+:::
+
+---
+
+## Question 4: Describing Normal Data
+
+:::: {#quiz-container-4}
+<p class="question">
+Data obtained on elements of the complete blood count in 2- to 24-month-old infants and children with viral infections are being compared with data in those with confirmed bacterial infection.
+<br><br>
+Of the following, and assuming continuous variables and a normal distribution, the measure of central tendency that yields the BEST descriptive information for evaluating the components of the complete blood count in this study is:
+</p>
+
+<form id="quiz-form-4">
+  <label>
+    <input type="radio" name="answer-4" value="A">
+    <span class="answer-text"><span class="answer-letter">A.</span> mean</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-4" value="B">
+    <span class="answer-text"><span class="answer-letter">B.</span> median</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-4" value="C">
+    <span class="answer-text"><span class="answer-letter">C.</span> mode</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-4" value="D">
+    <span class="answer-text"><span class="answer-letter">D.</span> range</span>
+  </label>
+  <button type="submit">Submit Answer</button>
+</form>
+
+<div id="result-4"></div>
+::::
+
+---
+
+## When Would Other Answers Be Correct?
+
+:::{.incremental}
+- **B. median:** This would be the best choice if the data were skewed, as we saw in the previous question.
+
+- **C. mode:** This is the most frequent value. It's most useful for nominal (categorical) data. For example, to describe the most common blood type in a sample. It is rarely the best measure for continuous data.
+
+- **D. range:** This is a measure of dispersion or spread (Max - Min), not central tendency. It tells you how spread out the data is, but not where the center is. It would be used alongside the mean to describe the data, but it is not a measure of the center itself.
+:::
+
+---
+
+## Question 5: Standard Deviation
+
+:::: {#quiz-container-5}
+<p class="question">
+An 11-year-old boy is experiencing unexplained weight loss. At his visit this year, he has lost 3.63 kg (8.00 lb). His current height and weight are shown in the growth chart below. The chart indicates his weight is at the 5th percentile.
+<br><br>
+Of the following, assuming weights are distributed normally, this boy's weight falls:
+</p>
+
+<form id="quiz-form-5">
+  <label>
+    <input type="radio" name="answer-5" value="A">
+    <span class="answer-text"><span class="answer-letter">A.</span> 1 to 2 standard deviations from the mean</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-5" value="B">
+    <span class="answer-text"><span class="answer-letter">B.</span> 2 to 3 standard deviations from the mean</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-5" value="C">
+    <span class="answer-text"><span class="answer-letter">C.</span> greater than 3 standard deviations from the mean</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-5" value="D">
+    <span class="answer-text"><span class="answer-letter">D.</span> less than 1 standard deviation from the mean</span>
+  </label>
+  <button type="submit">Submit Answer</button>
+</form>
+
+<div id="result-5"></div>
+::::
+
+---
+
+## Weight-for-Age Growth Chart
+
+```{r fig.width=10, fig.height=7, fig.align='center'}
+# Create growth chart data
+age <- seq(2, 20, by = 0.1)
+mean_weight <- 2.5 + 2.3 * age + 0.01 * age^2
+sd_weight <- 1.5 + 0.3 * age
+
+# Create percentile curves
+p3 <- mean_weight - 2 * sd_weight
+p16 <- mean_weight - 1 * sd_weight
+p50 <- mean_weight
+p84 <- mean_weight + 1 * sd_weight
+p97 <- mean_weight + 2 * sd_weight
+
+# Create data frame
+growth_data <- data.frame(
+  age = age,
+  p3 = p3,
+  p16 = p16,
+  p50 = p50,
+  p84 = p84,
+  p97 = p97
+)
+
+# Calculate 5th percentile for age 11
+age_11_mean <- 2.5 + 2.3 * 11 + 0.01 * 11^2
+age_11_sd <- 1.5 + 0.3 * 11
+p5_weight <- age_11_mean + qnorm(0.05) * age_11_sd
+
+# Create the plot
+ggplot(growth_data, aes(x = age)) +
+  geom_line(aes(y = p3), color = "#808080", size = 1) +
+  geom_line(aes(y = p16), color = "#808080", size = 1) +
+  geom_line(aes(y = p50), color = "#43418A", size = 1.5) +
+  geom_line(aes(y = p84), color = "#808080", size = 1) +
+  geom_line(aes(y = p97), color = "#808080", size = 1) +
+  
+  # Add labels
+  annotate("text", x = 20.5, y = p50[length(p50)], label = "50th (Mean)", 
+           color = "#43418A", fontface = "bold", hjust = 0) +
+  annotate("text", x = 20.5, y = p84[length(p84)], label = "84th (+1 SD)", 
+           color = "#808080", hjust = 0) +
+  annotate("text", x = 20.5, y = p16[length(p16)], label = "16th (-1 SD)", 
+           color = "#808080", hjust = 0) +
+  annotate("text", x = 20.5, y = p97[length(p97)], label = "97th (+2 SD)", 
+           color = "#808080", hjust = 0) +
+  annotate("text", x = 20.5, y = p3[length(p3)], label = "3rd (-2 SD)", 
+           color = "#808080", hjust = 0) +
+  
+  # Add the boy's data point
+  geom_point(x = 11, y = p5_weight, color = "#E74C3C", size = 5) +
+  annotate("text", x = 11.5, y = p5_weight, label = "Boy's Weight\n(5th percentile)", 
+           color = "#E74C3C", fontface = "bold", hjust = 0) +
+  
+  labs(title = "Weight-for-Age Growth Chart for Boys",
+       x = "Age (Years)",
+       y = "Weight (kg)") +
+  scale_x_continuous(breaks = seq(2, 20, by = 2), limits = c(2, 22)) +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        plot.title = element_text(size = 18, face = "bold", color = "#43418A"),
+        axis.title = element_text(size = 14, face = "bold"))
+```
+
+---
+
+## When Would Other Answers Be Correct?
+
+:::{.incremental}
+- **B. 2 to 3 standard deviations from the mean:** This would be correct if his weight was extremely low, falling between the 3rd percentile (~-2 SD) and the 0.1st percentile (~-3 SD).
+
+- **C. greater than 3 standard deviations from the mean:** This would be correct for a truly extreme value, either very high (>99.9th percentile) or very low (<0.1st percentile).
+
+- **D. less than 1 standard deviation from the mean:** This would be correct if his weight was closer to average, for example, at the 25th percentile (which falls between the 16th and 50th percentiles).
+:::
+
+---
+
+# Part 2: Foundational Epidemiology & Diagnostic Testing {background-color="#43418A"}
+
+---
+
+## Question 6: Prevalence vs. Incidence
+
+:::: {#quiz-container-6}
+<p class="question">
+A screening program conducted at a high school is screening student athletes with electrocardiography to identify undiagnosed heart disease. Of 1,000 students, 2 students are found to have a prolonged QT interval.
+<br><br>
+Of the following, the parameter of long QT syndrome that can BEST be calculated by these data is the:
+</p>
+
+<form id="quiz-form-6">
+  <label>
+    <input type="radio" name="answer-6" value="A">
+    <span class="answer-text"><span class="answer-letter">A.</span> incidence</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-6" value="B">
+    <span class="answer-text"><span class="answer-letter">B.</span> odds ratio</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-6" value="C">
+    <span class="answer-text"><span class="answer-letter">C.</span> prevalence</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-6" value="D">
+    <span class="answer-text"><span class="answer-letter">D.</span> relative risk</span>
+  </label>
+  <button type="submit">Submit Answer</button>
+</form>
+
+<div id="result-6"></div>
+::::
+
+---
+
+## When Would Other Answers Be Correct?
+
+:::{.incremental}
+- **A. incidence:** This would be correct if the study stated: "We followed 1,000 initially healthy athletes for one year, and during that year, 2 athletes developed long QT syndrome for the first time."
+
+- **B. odds ratio:** This is a measure of association, typically from a case-control study. You would need two groups (e.g., students with long QT and students without) and you would compare the odds of a certain exposure (e.g., family history) between the two groups.
+
+- **D. relative risk:** This is a measure of association, typically from a cohort study. You would need to follow two groups over time (e.g., one group exposed to a risk factor, one group not exposed) and compare the incidence of the disease in each group.
+:::
+
+---
+
+## Question 7: Calculating Incidence
+
+:::: {#quiz-container-7}
+<p class="question">
+A recent article described the epidemiology of celiac disease in an inner-city community. The study evaluated a city with 50,000 children without celiac disease at the start of the study. At the end of the 5-year period, the following number of children were diagnosed with celiac disease:
+</p>
+<div class="data-display">
+Year 1: 5 → Year 2: 5 → Year 3: 5 → Year 4: 10 → Year 5: 10
+</div>
+<p class="question">
+Of the following, the annual INCIDENCE rate of celiac disease per 100,000 patients in this study is:
+</p>
+
+<form id="quiz-form-7">
+  <label>
+    <input type="radio" name="answer-7" value="A">
+    <span class="answer-text"><span class="answer-letter">A.</span> 5</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-7" value="B">
+    <span class="answer-text"><span class="answer-letter">B.</span> 7</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-7" value="C">
+    <span class="answer-text"><span class="answer-letter">C.</span> 14</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-7" value="D">
+    <span class="answer-text"><span class="answer-letter">D.</span> 35</span>
+  </label>
+  <button type="submit">Submit Answer</button>
+</form>
+
+<div id="result-7"></div>
+::::
+
+---
+
+## How You Might Get the Wrong Answer
+
+:::{.incremental}
+- **A. 5:** This is the number of new cases in Year 1, not the average annual rate.
+
+- **B. 7:** This is the correct average number of new cases per year, but it is not the rate per 100,000. This is a common mistake of stopping the calculation too early.
+
+- **D. 35:** This is the total number of new cases over the entire 5-year period, not the annual rate.
+:::
+
+---
+
+## Question 8: Sensitivity
+
+:::: {#quiz-container-8}
+<p class="question">
+An infant is admitted to the intensive care unit with septic shock. A recent study presented the following information: among 200 children admitted with septic shock, 100 developed acute kidney injury. Of those who developed acute kidney injury, the test was positive in 70 children. However, the test was also positive in 10 children who did not develop acute kidney injury.
+</p>
+<p class="question">
+Of the following, based on these results, the SENSITIVITY of the new blood test for detecting acute kidney injury is:
+</p>
+
+<form id="quiz-form-8">
+  <label>
+    <input type="radio" name="answer-8" value="A">
+    <span class="answer-text"><span class="answer-letter">A.</span> 10%</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-8" value="B">
+    <span class="answer-text"><span class="answer-letter">B.</span> 30%</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-8" value="C">
+    <span class="answer-text"><span class="answer-letter">C.</span> 70%</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-8" value="D">
+    <span class="answer-text"><span class="answer-letter">D.</span> 90%</span>
+  </label>
+  <button type="submit">Submit Answer</button>
+</form>
+
+<div id="result-8"></div>
+::::
+
+---
+
+## 2×2 Contingency Table for Question 8
+
+```{r}
+# Create the 2x2 table
+library(knitr)
+library(kableExtra)
+
+contingency_table <- data.frame(
+  Test = c("Test Positive", "Test Negative", "Total"),
+  `Has AKI` = c("70 (TP)", "30 (FN)", "100"),
+  `No AKI` = c("10 (FP)", "90 (TN)", "100"),
+  Total = c("80", "120", "200")
+)
+
+kable(contingency_table, col.names = c("", "Has AKI", "No AKI", "Total"),
+      align = c("l", "c", "c", "c")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                full_width = FALSE, font_size = 20) %>%
+  column_spec(1, bold = TRUE) %>%
+  column_spec(2, background = "#f0f0f0") %>%
+  row_spec(0, bold = TRUE, color = "white", background = "#43418A")
+```
+
+**Sensitivity focuses only on the "Has AKI" column**
+
+---
+
+## What Do the Other Numbers Represent?
+
+:::{.incremental}
+- **A. 10%:** This is the False Positive Rate (10 False Positives / 100 Healthy Patients).
+
+- **B. 30%:** This is the False Negative Rate (30 False Negatives / 100 Patients with AKI).
+
+- **D. 90%:** This is the Specificity of the test. Specificity answers: "Of all the people who are healthy, what percentage test negative?"
+  - Calculation: True Negatives / (True Negatives + False Positives) = 90 / (90 + 10) = 90 / 100 = 90%.
+:::
+
+---
+
+## Question 9: Sensitivity & Specificity
+
+:::: {#quiz-container-9}
+<p class="question">
+A research article describes a potential new serum screening test for eosinophilic esophagitis (EoE). One hundred children are recruited. Of the 25 with EoE, the screening test was positive in 20 and negative in 5. Of the 75 without EoE, the screening test was negative in 65 and positive in 10.
+<br><br>
+Of the following, the sensitivity and specificity of the screening test are:
+</p>
+
+<form id="quiz-form-9">
+  <label>
+    <input type="radio" name="answer-9" value="A">
+    <span class="answer-text"><span class="answer-letter">A.</span> Sensitivity 20.0%, Specificity 75.0%</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-9" value="B">
+    <span class="answer-text"><span class="answer-letter">B.</span> Sensitivity 80.0%, Specificity 86.7%</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-9" value="C">
+    <span class="answer-text"><span class="answer-letter">C.</span> Sensitivity 80.0%, Specificity 25.0%</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-9" value="D">
+    <span class="answer-text"><span class="answer-letter">D.</span> Sensitivity 20.0%, Specificity 25.0%</span>
+  </label>
+  <button type="submit">Submit Answer</button>
+</form>
+
+<div id="result-9"></div>
+::::
+
+---
+
+## 2×2 Table for Question 9
+
+```{r}
+# Create the 2x2 table for question 9
+contingency_table_9 <- data.frame(
+  Test = c("Test Positive", "Test Negative", "Total"),
+  `Has EoE` = c("20 (TP)", "5 (FN)", "25"),
+  `No EoE` = c("10 (FP)", "65 (TN)", "75"),
+  Total = c("30", "70", "100")
+)
+
+kable(contingency_table_9, col.names = c("", "Has EoE (Disease)", "No EoE (Healthy)", "Total"),
+      align = c("l", "c", "c", "c")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                full_width = FALSE, font_size = 20) %>%
+  column_spec(1, bold = TRUE) %>%
+  row_spec(0, bold = TRUE, color = "white", background = "#43418A")
+```
+
+**Calculations:**
+- Sensitivity = TP / (TP + FN) = 20 / (20 + 5) = 20 / 25 = **80.0%**
+- Specificity = TN / (TN + FP) = 65 / (65 + 10) = 65 / 75 = **86.7%**
+
+---
+
+# Part 3: A Critical Capstone Concept {background-color="#43418A"}
+
+---
+
+## Question 10: Association vs. Causation
+
+:::: {#quiz-container-10}
+<p class="question">
+The health editor of a parenting magazine inquires about a study that was recently published. The study examined the relationship between toddler thumb-sucking and later food allergy. The scatterplot below shows the study results.
+</p>
+<p class="question">
+Of the following, based on the provided scatterplot, the MOST appropriate conclusion to draw from this study is that thumb-sucking:
+</p>
+
+<form id="quiz-form-10">
+  <label>
+    <input type="radio" name="answer-10" value="A">
+    <span class="answer-text"><span class="answer-letter">A.</span> is associated with a lower incidence of food allergy</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-10" value="B">
+    <span class="answer-text"><span class="answer-letter">B.</span> is a result of food allergy</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-10" value="C">
+    <span class="answer-text"><span class="answer-letter">C.</span> is unrelated to the incidence of food allergy</span>
+  </label>
+  <label>
+    <input type="radio" name="answer-10" value="D">
+    <span class="answer-text"><span class="answer-letter">D.</span> lowers the incidence of food allergy</span>
+  </label>
+  <button type="submit">Submit Answer</button>
+</form>
+
+<div id="result-10"></div>
+::::
+
+---
+
+## Relationship Between Thumb-Sucking and Food Allergies
+
+```{r fig.width=10, fig.height=6, fig.align='center'}
+# Create data with negative correlation
+set.seed(456)
+n <- 200
+thumb_sucking <- runif(n, 0, 36)
+# Add negative correlation with some noise
+food_allergies <- 5 - 0.12 * thumb_sucking + rnorm(n, 0, 0.8)
+# Ensure non-negative values
+food_allergies[food_allergies < 0] <- runif(sum(food_allergies < 0), 0, 0.5)
+
+# Create data frame
+scatter_data <- data.frame(
+  thumb_sucking = thumb_sucking,
+  food_allergies = food_allergies
+)
+
+# Create the plot
+ggplot(scatter_data, aes(x = thumb_sucking, y = food_allergies)) +
+  geom_point(color = "#8CB3D9", alpha = 0.6, size = 2) +
+  geom_smooth(method = "lm", se = TRUE, color = "#43418A", fill = "#43418A", alpha = 0.2) +
+  labs(title = "Relationship Between Thumb-Sucking and Food Allergies",
+       x = "Months of Thumb-Sucking",
+       y = "Number of Diagnosed Food Allergies") +
+  theme_minimal() +
+  theme(text = element_text(size = 14),
+        plot.title = element_text(size = 18, face = "bold", color = "#43418A"),
+        axis.title = element_text(size = 14, face = "bold"))
+```
+
+---
+
+## Why the Other Conclusions Are Wrong
+
+:::{.incremental}
+- **B. is a result of food allergy:** This reverses the potential causal pathway with no evidence. It's an unsupported causal claim.
+
+- **C. is unrelated to the incidence of food allergy:** This is factually incorrect. The scatterplot clearly shows a relationship (a negative correlation). If it were unrelated, the data points would be scattered randomly with no discernible trend.
+
+- **D. lowers the incidence of food allergy:** This is a causal claim. The word "lowers" implies that thumb-sucking is the active agent causing the effect. While this might be a hypothesis for a future study (like a randomized controlled trial), this observational data cannot support this strong conclusion.
+:::
+
+---
+
+## Summary
+
+### Key Takeaways
+
+:::{.incremental}
+- **Variable Types Matter:** Choose the right statistical approach based on whether your data is continuous, discrete, nominal, or ordinal
+
+- **Central Tendency:** Use mean for normal distributions, median for skewed distributions
+
+- **Standard Deviations:** In normal distributions, ±1 SD = 68%, ±2 SD = 95%, ±3 SD = 99.7%
+
+- **Prevalence vs. Incidence:** Prevalence is a snapshot, incidence measures new cases over time
+
+- **Diagnostic Tests:** Sensitivity = true positive rate, Specificity = true negative rate
+
+- **Association ≠ Causation:** Observational studies can show correlation but cannot prove causation
+:::
+
+<br>
+
+**Austin Meyer, MD, PhD, MS, MPH, MS**
+
+<br>
+
+*Remember: The goal is not just to know statistics, but to apply them wisely in clinical practice.*
+
+```{=html}
+<script>
+// Quiz functionality for all questions
+document.addEventListener('DOMContentLoaded', function() {
+  // Create modals with explanation content directly
+  const explanations = {
+    1: `<p><strong>Correct Answer: A. continuous</strong></p>
+  <p><strong>Explanation:</strong> Continuous variables can theoretically take on an infinite number of values between any two points. Both BMI and HbA1c are measured, not counted. They can be carried out to many decimal places depending on the precision of the measurement instrument (e.g., a BMI of 22.5 or 22.51). This is distinct from discrete variables, which are counted in whole numbers (e.g., number of children).</p>
+  <p><strong>Key Takeaway:</strong> If a variable is measured on a scale with potentially infinite values, it's continuous.</p>`,
+    2: `<p><strong>Correct Answer: D. ordinal variable</strong></p>
+  <p><strong>Explanation:</strong> The variable is broken into categories that have a clear, meaningful order or hierarchy (less than $50k < $50k-$75k < etc.). However, the intervals between the categories are not equal. The "less than $50,000" category is an open-ended range, as is "greater than $100,000." This conversion of a continuous variable (exact income) into ordered categories is a common practice for simplifying data collection and analysis.</p>
+  <p><strong>Key Takeaway:</strong> If data is in ordered categories, it's an ordinal variable.</p>`,
+    3: `<p><strong>Correct Answer: C. the median is the most appropriate measure of length of stay</strong></p>
+  <p><strong>Explanation:</strong> The histogram shows right-skewed data, meaning there are a few very high values (outliers) that pull the tail to the right. The mean (the average) is highly sensitive to outliers. These few extremely long hospital stays will artificially inflate the mean, making it a poor representation of a "typical" patient's stay. The median (the middle value) is resistant to outliers. It represents the 50th percentile, providing a much better measure of central tendency for skewed datasets.</p>
+  <p><strong>Key Takeaway:</strong> For skewed data, always prefer the median over the mean. Mean is for normally distributed (symmetric) data.</p>`,
+    4: `<p><strong>Correct Answer: A. mean</strong></p>
+  <p><strong>Explanation:</strong> The question explicitly states two key conditions: the variables are continuous (like WBC count, hemoglobin) and they follow a normal distribution. For normally distributed (symmetric, bell-shaped) data, the mean, median, and mode are all equal. The mean is the conventional and most powerful measure of central tendency for normal distributions because it uses every data point in its calculation.</p>
+  <p><strong>Key Takeaway:</strong> When you see "normal distribution," think "mean."</p>`,
+    5: `<p><strong>Correct Answer: A. 1 to 2 standard deviations from the mean</strong></p>
+  <p><strong>Explanation:</strong> For normally distributed data (like growth charts):</p>
+  <ul>
+    <li>The 50th percentile represents the mean.</li>
+    <li>±1 SD from the mean covers ~68% of the population (from the 16th to the 84th percentile).</li>
+    <li>±2 SD from the mean covers ~95% of the population (from the 3rd to the 97th percentile).</li>
+  </ul>
+  <p>The vignette states the boy's weight is at the 5th percentile. The 5th percentile falls between the 3rd percentile (-2 SD) and the 16th percentile (-1 SD). Therefore, his weight is between 1 and 2 standard deviations below the mean.</p>`,
+    6: `<p><strong>Correct Answer: C. prevalence</strong></p>
+  <p><strong>Explanation:</strong> Prevalence is a snapshot in time. It measures the number of existing cases (both new and old) in a defined population at a single point in time. The study screened 1,000 students and found 2 cases. This is a snapshot.</p>
+  <p>Prevalence = (Number of existing cases) / (Total population) = 2 / 1000 = 0.002 or 0.2%</p>
+  <p>Incidence, by contrast, measures new cases that develop over a period of time. To measure incidence, you would need to follow the 998 healthy students over time to see who develops the condition.</p>
+  <p><strong>Key Takeaway:</strong> Prevalence = Snapshot. Incidence = Movie.</p>`,
+    7: `<p><strong>Correct Answer: C. 14</strong></p>
+  <p style="font-size: 0.9em;"><strong>Calculation:</strong></p>
+  <ol style="font-size: 0.9em;">
+    <li>Total new cases: 5+5+5+10+10 = 35 cases over 5 years</li>
+    <li>Average per year: 35/5 = 7 new cases per year</li>
+    <li>Annual incidence rate: 7/50,000 = 0.00014</li>
+    <li>Per 100,000: 0.00014 × 100,000 = 14</li>
+  </ol>`,
+    8: `<p><strong>Correct Answer: C. 70%</strong></p>
+  <p><strong>Explanation:</strong> Sensitivity answers the question: "Of all the people who actually have the disease, what percentage test positive?"</p>
+  <p>Formula: Sensitivity = True Positives / (True Positives + False Negatives)</p>
+  <p><strong>Let's break down the numbers:</strong></p>
+  <ul>
+    <li>Total patients with AKI (Disease Present) = 100</li>
+    <li>Test positive in those with AKI (True Positives) = 70</li>
+    <li>This means 30 patients with AKI must have tested negative (False Negatives = 100 - 70)</li>
+  </ul>
+  <p><strong>Calculation:</strong> Sensitivity = 70 / (70 + 30) = 70 / 100 = 70%</p>`,
+    9: `<p><strong>Correct Answer: B. Sensitivity 80.0%, Specificity 86.7%</strong></p>
+  <p><strong>Calculations:</strong></p>
+  <ul>
+    <li>Sensitivity = TP / (TP + FN) = 20 / (20 + 5) = 20 / 25 = 80.0%</li>
+    <li>Specificity = TN / (TN + FP) = 65 / (65 + 10) = 65 / 75 = 86.7%</li>
+  </ul>
+  <p><strong>Teaching Point:</strong> Note that even peer-reviewed source material can have typos. Always perform the calculations yourself to verify the results.</p>`,
+    10: `<p><strong>Correct Answer: A. is associated with a lower incidence of food allergy</strong></p>
+  <p><strong>Explanation:</strong> The scatterplot shows a clear relationship: as the months of thumb-sucking increase, the number of food allergies tends to decrease. This is a negative correlation. Association and correlation are appropriate terms to describe this relationship. We can say the two variables are linked.</p>
+  <p>However, this study design cannot prove causation. We don't know if thumb-sucking causes a lower incidence of allergies. There could be a confounding variable (e.g., exposure to microbes, genetics, socioeconomic factors) that influences both behaviors.</p>
+  <p><strong>Key Takeaway:</strong> The most important phrase in statistics: <em>Correlation does not imply causation.</em></p>`
+  };
+
+  // Create modals for all explanations
+  for (let i = 1; i <= 10; i++) {
+    // Create modal elements
+    const modal = document.createElement('div');
+    modal.id = `modal-${i}`;
+    modal.className = 'modal';
+    
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
+    
+    const closeBtn = document.createElement('span');
+    closeBtn.className = 'close';
+    closeBtn.innerHTML = '&times;';
+    
+    // Set explanation content
+    const content = explanations[i];
+    
+    modalContent.innerHTML = content;
+    modalContent.appendChild(closeBtn);
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+    
+    // Add close functionality
+    closeBtn.onclick = function() {
+      modal.style.display = 'none';
+    };
+    
+    modal.onclick = function(event) {
+      if (event.target === modal) {
+        modal.style.display = 'none';
+      }
+    };
+  }
+  
+  // Question 1
+  if (document.getElementById('quiz-form-1')) {
+    document.getElementById('quiz-form-1').onsubmit = function(e) {
+      e.preventDefault();
+      var selected = document.querySelector('input[name="answer-1"]:checked');
+      var resultDiv = document.getElementById('result-1');
+      var modal = document.getElementById('modal-1');
+      
+      if (selected) {
+        if (selected.value === 'A') {
+          resultDiv.innerHTML = '<p style="color: green; font-weight: bold;">✓ Correct!</p>';
+          modal.style.display = 'block';
+        } else {
+          resultDiv.innerHTML = '<p style="color: red; font-weight: bold;">✗ Incorrect. Try again!</p>';
+          modal.style.display = 'block';
+        }
+      } else {
+        resultDiv.innerHTML = '<p style="color: orange;">Please select an answer.</p>';
+      }
+    };
+  }
+
+  // Question 2
+  if (document.getElementById('quiz-form-2')) {
+    document.getElementById('quiz-form-2').onsubmit = function(e) {
+      e.preventDefault();
+      var selected = document.querySelector('input[name="answer-2"]:checked');
+      var resultDiv = document.getElementById('result-2');
+      var modal = document.getElementById('modal-2');
+      
+      if (selected) {
+        if (selected.value === 'D') {
+          resultDiv.innerHTML = '<p style="color: green; font-weight: bold;">✓ Correct!</p>';
+          modal.style.display = 'block';
+        } else {
+          resultDiv.innerHTML = '<p style="color: red; font-weight: bold;">✗ Incorrect. Try again!</p>';
+          modal.style.display = 'block';
+        }
+      } else {
+        resultDiv.innerHTML = '<p style="color: orange;">Please select an answer.</p>';
+      }
+    };
+  }
+
+  // Question 3
+  if (document.getElementById('quiz-form-3')) {
+    document.getElementById('quiz-form-3').onsubmit = function(e) {
+      e.preventDefault();
+      var selected = document.querySelector('input[name="answer-3"]:checked');
+      var resultDiv = document.getElementById('result-3');
+      var modal = document.getElementById('modal-3');
+      
+      if (selected) {
+        if (selected.value === 'C') {
+          resultDiv.innerHTML = '<p style="color: green; font-weight: bold;">✓ Correct!</p>';
+          modal.style.display = 'block';
+        } else {
+          resultDiv.innerHTML = '<p style="color: red; font-weight: bold;">✗ Incorrect. Try again!</p>';
+          modal.style.display = 'block';
+        }
+      } else {
+        resultDiv.innerHTML = '<p style="color: orange;">Please select an answer.</p>';
+      }
+    };
+  }
+
+  // Question 4
+  if (document.getElementById('quiz-form-4')) {
+    document.getElementById('quiz-form-4').onsubmit = function(e) {
+      e.preventDefault();
+      var selected = document.querySelector('input[name="answer-4"]:checked');
+      var resultDiv = document.getElementById('result-4');
+      var modal = document.getElementById('modal-4');
+      
+      if (selected) {
+        if (selected.value === 'A') {
+          resultDiv.innerHTML = '<p style="color: green; font-weight: bold;">✓ Correct!</p>';
+          modal.style.display = 'block';
+        } else {
+          resultDiv.innerHTML = '<p style="color: red; font-weight: bold;">✗ Incorrect. Try again!</p>';
+          modal.style.display = 'block';
+        }
+      } else {
+        resultDiv.innerHTML = '<p style="color: orange;">Please select an answer.</p>';
+      }
+    };
+  }
+
+  // Question 5
+  if (document.getElementById('quiz-form-5')) {
+    document.getElementById('quiz-form-5').onsubmit = function(e) {
+      e.preventDefault();
+      var selected = document.querySelector('input[name="answer-5"]:checked');
+      var resultDiv = document.getElementById('result-5');
+      var modal = document.getElementById('modal-5');
+      
+      if (selected) {
+        if (selected.value === 'A') {
+          resultDiv.innerHTML = '<p style="color: green; font-weight: bold;">✓ Correct!</p>';
+          modal.style.display = 'block';
+        } else {
+          resultDiv.innerHTML = '<p style="color: red; font-weight: bold;">✗ Incorrect. Try again!</p>';
+          modal.style.display = 'block';
+        }
+      } else {
+        resultDiv.innerHTML = '<p style="color: orange;">Please select an answer.</p>';
+      }
+    };
+  }
+
+  // Question 6
+  if (document.getElementById('quiz-form-6')) {
+    document.getElementById('quiz-form-6').onsubmit = function(e) {
+      e.preventDefault();
+      var selected = document.querySelector('input[name="answer-6"]:checked');
+      var resultDiv = document.getElementById('result-6');
+      var modal = document.getElementById('modal-6');
+      
+      if (selected) {
+        if (selected.value === 'C') {
+          resultDiv.innerHTML = '<p style="color: green; font-weight: bold;">✓ Correct!</p>';
+          modal.style.display = 'block';
+        } else {
+          resultDiv.innerHTML = '<p style="color: red; font-weight: bold;">✗ Incorrect. Try again!</p>';
+          modal.style.display = 'block';
+        }
+      } else {
+        resultDiv.innerHTML = '<p style="color: orange;">Please select an answer.</p>';
+      }
+    };
+  }
+
+  // Question 7
+  if (document.getElementById('quiz-form-7')) {
+    document.getElementById('quiz-form-7').onsubmit = function(e) {
+      e.preventDefault();
+      var selected = document.querySelector('input[name="answer-7"]:checked');
+      var resultDiv = document.getElementById('result-7');
+      var modal = document.getElementById('modal-7');
+      
+      if (selected) {
+        if (selected.value === 'C') {
+          resultDiv.innerHTML = '<p style="color: green; font-weight: bold;">✓ Correct!</p>';
+          modal.style.display = 'block';
+        } else {
+          resultDiv.innerHTML = '<p style="color: red; font-weight: bold;">✗ Incorrect. Try again!</p>';
+          modal.style.display = 'block';
+        }
+      } else {
+        resultDiv.innerHTML = '<p style="color: orange;">Please select an answer.</p>';
+      }
+    };
+  }
+
+  // Question 8
+  if (document.getElementById('quiz-form-8')) {
+    document.getElementById('quiz-form-8').onsubmit = function(e) {
+      e.preventDefault();
+      var selected = document.querySelector('input[name="answer-8"]:checked');
+      var resultDiv = document.getElementById('result-8');
+      var modal = document.getElementById('modal-8');
+      
+      if (selected) {
+        if (selected.value === 'C') {
+          resultDiv.innerHTML = '<p style="color: green; font-weight: bold;">✓ Correct!</p>';
+          modal.style.display = 'block';
+        } else {
+          resultDiv.innerHTML = '<p style="color: red; font-weight: bold;">✗ Incorrect. Try again!</p>';
+          modal.style.display = 'block';
+        }
+      } else {
+        resultDiv.innerHTML = '<p style="color: orange;">Please select an answer.</p>';
+      }
+    };
+  }
+
+  // Question 9
+  if (document.getElementById('quiz-form-9')) {
+    document.getElementById('quiz-form-9').onsubmit = function(e) {
+      e.preventDefault();
+      var selected = document.querySelector('input[name="answer-9"]:checked');
+      var resultDiv = document.getElementById('result-9');
+      var modal = document.getElementById('modal-9');
+      
+      if (selected) {
+        if (selected.value === 'B') {
+          resultDiv.innerHTML = '<p style="color: green; font-weight: bold;">✓ Correct!</p>';
+          modal.style.display = 'block';
+        } else {
+          resultDiv.innerHTML = '<p style="color: red; font-weight: bold;">✗ Incorrect. Try again!</p>';
+          modal.style.display = 'block';
+        }
+      } else {
+        resultDiv.innerHTML = '<p style="color: orange;">Please select an answer.</p>';
+      }
+    };
+  }
+
+  // Question 10
+  if (document.getElementById('quiz-form-10')) {
+    document.getElementById('quiz-form-10').onsubmit = function(e) {
+      e.preventDefault();
+      var selected = document.querySelector('input[name="answer-10"]:checked');
+      var resultDiv = document.getElementById('result-10');
+      var modal = document.getElementById('modal-10');
+      
+      if (selected) {
+        if (selected.value === 'A') {
+          resultDiv.innerHTML = '<p style="color: green; font-weight: bold;">✓ Correct!</p>';
+          modal.style.display = 'block';
+        } else {
+          resultDiv.innerHTML = '<p style="color: red; font-weight: bold;">✗ Incorrect. Try again!</p>';
+          modal.style.display = 'block';
+        }
+      } else {
+        resultDiv.innerHTML = '<p style="color: orange;">Please select an answer.</p>';
+      }
+    };
+  }
+  
+  // Style all submit buttons
+  var buttons = document.querySelectorAll('button[type="submit"]');
+  for (var i = 0; i < buttons.length; i++) {
+    buttons[i].style.cssText = 'background-color: #43418A; color: white; border: none; padding: 8px 16px; margin-top: 10px; border-radius: 4px; cursor: pointer; font-weight: bold;';
+  }
+  
+  // Add hover effect to buttons
+  for (var i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener('mouseover', function() {
+      this.style.backgroundColor = '#32307a';
+    });
+    buttons[i].addEventListener('mouseout', function() {
+      this.style.backgroundColor = '#43418A';
+    });
+  }
+});
+</script>
+```
